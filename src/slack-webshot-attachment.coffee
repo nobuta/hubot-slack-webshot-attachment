@@ -69,11 +69,12 @@ module.exports = (robot) ->
 
       slack.api "files.upload", param, (err, response) ->
 
-        err = response.error unless response.ok
-
         if (err)
           robot.logger.error "Upload error: ", err
           msg.reply "Upload error: " + err
+        else if (!response.ok)
+          robot.logger.error "Upload error: ", response
+          msg.reply "Upload error: " + response
         else
           if (response.warning)
             robot.logger.warn "Upload warning: ", response.warning
