@@ -57,7 +57,7 @@ module.exports = (robot) ->
       writeStream.write data.toString('binary'), 'binary'
 
     renderStream.on "error", (err) ->
-      console.error "Webshot error: " + err
+      robot.logger.error "Webshot error: ", err
       msg.reply "Webshot error: " + err
 
     renderStream.on "end", () ->
@@ -72,7 +72,9 @@ module.exports = (robot) ->
         err = response.error unless response.ok
 
         if (err)
-          console.error "Upload error: " + err
+          robot.logger.error "Upload error: ", err
           msg.reply "Upload error: " + err
         else
-          console.log "Upload success: ", response.file.permalink
+          if (response.warning)
+            robot.logger.warn "Upload warning: ", response.warning
+          robot.logger.debug "Upload success: ", response.file.permalink
